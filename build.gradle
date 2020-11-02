@@ -9,9 +9,9 @@ apply plugin: 'nrlssc.gradle'
 sourceCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
 
-nrl{
-    publishNexus = true
-    resolveNexus = true
+
+hgit{
+    forceGit = true
 }
 
 
@@ -30,7 +30,7 @@ dependencies {
 
 pluginBundle {
     website = 'https://geoint.nrlssc.org/'
-    vcsUrl = 'https://github.com/seanrl/util-plugin.git'
+    vcsUrl = 'https://github.com/seanrl/nrl-gradle/util-plugin.git'
     tags = ['utilities', 'build', 'diagram']
 }
 
