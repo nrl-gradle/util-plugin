@@ -1,0 +1,3 @@
+[submodule "add-copyright"]
+	path = add-copyright
+	url = https://github.com/nrl-gradle/add-copyright.git
