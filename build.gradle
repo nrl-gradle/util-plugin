@@ -3,6 +3,7 @@ plugins{
     id 'groovy'
     id 'ivy-publish'
     id 'com.gradle.plugin-publish' version '0.11.0'
+    id 'nrlssc.gradle' version '1.32.40'
 }
 
 apply plugin: 'nrlssc.gradle'

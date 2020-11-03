@@ -1,20 +1,5 @@
+plugins {
+    id 'nrlssc.projects' version '1.10.13'
+}
 rootProject.name = 'util-plugin'
 
-include 'add-copyright'
-
-gradle.allprojects{
-    it.buildscript{
-        repositories {
-            ivy {
-                url 'http://mingus.nrlssc.navy.mil/artifactory/list/ivy-all-local'
-                patternLayout {
-                    ivy "[organisation]/[module]/[revision]/ivys/ivy-[revision].xml"
-                    artifact "[organisation]/[module]/[revision]/[type]s/[artifact]-[revision].[ext]"
-                }
-            }
-        }
-        dependencies {
-            classpath 'mil.navy.nrlssc:nrl-plugin:1.20.28'
-        }
-    }
-}
