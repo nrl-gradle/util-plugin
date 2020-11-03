@@ -30,8 +30,8 @@ dependencies {
 }
 
 pluginBundle {
-    website = 'https://geoint.nrlssc.org/'
-    vcsUrl = 'https://github.com/seanrl/nrl-gradle/util-plugin.git'
+    website = 'https://github.com/nrl-gradle/util-plugin'
+    vcsUrl = 'https://github.com/nrl-gradle/util-plugin.git'
     tags = ['utilities', 'build', 'diagram']
 }
 
