@@ -19,7 +19,7 @@ hgit{
 dependencies {
     compile gradleApi()
     compile localGroovy()
-    compile 'mil.navy.nrlssc:gplugin-commons:2.0.2'
+    compile 'mil.navy.nrlssc:gplugin-commons:2.0.5'
     compile 'mil.navy.nrlssc:add-copyright:2.0.18'
     compile 'io.github.classgraph:classgraph:4.8.78'
     compile 'eu.de-swaef.pdf:Markdown2Pdf:2.0.1'
