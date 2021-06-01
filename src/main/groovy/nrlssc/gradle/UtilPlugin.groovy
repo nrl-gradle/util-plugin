@@ -9,6 +9,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.tasks.Sync
 import org.gradle.api.tasks.bundling.Jar
 import org.slf4j.Logger
@@ -36,9 +37,11 @@ class UtilPlugin implements Plugin<Project>{
     
     static Sync createCollectLibsTask(Project project) {
         Sync clTask = project.tasks.create("collectLibs", Sync.class)
+        clTask.duplicatesStrategy = DuplicatesStrategy.INCLUDE
         clTask.configure {
             project.gradle.projectsEvaluated {
-                from project.configurations.default
+                from project.configurations.compileClasspath
+                from project.configurations.runtimeClasspath
                 into "libs/raw"
             }
         }
