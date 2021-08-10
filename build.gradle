@@ -3,26 +3,24 @@ plugins{
     id 'groovy'
     id 'ivy-publish'
     id 'com.gradle.plugin-publish' version '0.11.0'
-    id 'nrlssc.gradle' version '3.0.85'
+    id 'nrlssc.gradle' version '3.0.88'
 }
 
 apply plugin: 'nrlssc.gradle'
 sourceCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
 
-
 hgit{
     forceGit = true
 }
 
-
 dependencies {
-    compileClasspath gradleApi()
-    compileClasspath localGroovy()
-    compileClasspath 'mil.navy.nrlssc:gplugin-commons:2.0.8'
-    compileClasspath 'mil.navy.nrlssc:add-copyright:2.0.18'
-    compileClasspath 'io.github.classgraph:classgraph:4.8.78'
-    compileClasspath 'eu.de-swaef.pdf:Markdown2Pdf:2.0.1'
+    api gradleApi()
+    implementation localGroovy()
+    api 'mil.navy.nrlssc:gplugin-commons:2.0.8'
+    api 'mil.navy.nrlssc:add-copyright:2.0.18'
+    implementation 'io.github.classgraph:classgraph:4.8.78'
+    implementation 'eu.de-swaef.pdf:Markdown2Pdf:2.0.1'
     
 
     testImplementation gradleTestKit(),
