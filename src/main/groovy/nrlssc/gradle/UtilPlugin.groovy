@@ -10,6 +10,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.DuplicatesStrategy
+import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.Sync
 import org.gradle.api.tasks.bundling.Jar
 import org.slf4j.Logger
@@ -22,6 +23,8 @@ class UtilPlugin implements Plugin<Project>{
     
     @Override
     void apply(Project project) {
+        project.pluginManager.apply(JavaPlugin)
+
         Jar sj = createSourcesJarTask(project)
         Jar jj = createJavadocJarTask(project)
         Sync cl = createCollectLibsTask(project)
@@ -59,7 +62,7 @@ class UtilPlugin implements Plugin<Project>{
                 from project.sourceSets.main.allSource
             }
         }
-        sj.dependsOn project.tasks.classes
+        sj.dependsOn project.tasks.getByName('classes')
 
         sj.group = 'build'
         sj.description = 'Builds an internalJar with .java file sources in it, for distribution to clients who need source code.  This will run the addCopyrightText task.'

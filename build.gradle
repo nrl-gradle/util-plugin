@@ -2,8 +2,8 @@ plugins{
     id 'java-gradle-plugin'
     id 'groovy'
     id 'ivy-publish'
-    id 'com.gradle.plugin-publish' version '0.11.0'
-    id 'nrlssc.gradle' version '3.0.88'
+    id 'com.gradle.plugin-publish' version '1.0.0-rc-1'
+    id 'nrlssc.gradle' version '3.0.93'
 }
 
 apply plugin: 'nrlssc.gradle'
@@ -17,9 +17,10 @@ hgit{
 dependencies {
     api gradleApi()
     implementation localGroovy()
-    api 'mil.navy.nrlssc:gplugin-commons:2.0.8'
+    api 'mil.navy.nrlssc:gplugin-commons:2.0.10'
     api 'mil.navy.nrlssc:add-copyright:2.0.18'
     implementation 'io.github.classgraph:classgraph:4.8.78'
+    implementation 'org.xhtmlrenderer:flying-saucer-pdf:9.1.22'
     implementation 'eu.de-swaef.pdf:Markdown2Pdf:2.0.1'
     
 
