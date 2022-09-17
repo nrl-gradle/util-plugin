@@ -17,7 +17,7 @@ hgit{
 dependencies {
     api gradleApi()
     implementation localGroovy()
-    api 'mil.navy.nrlssc:gplugin-commons:2.0.10'
+    api 'mil.navy.nrlssc:gplugin-commons:3.0.14'
     api 'mil.navy.nrlssc:add-copyright:2.0.18'
     implementation 'io.github.classgraph:classgraph:4.8.78'
     implementation 'org.xhtmlrenderer:flying-saucer-pdf:9.1.22'
