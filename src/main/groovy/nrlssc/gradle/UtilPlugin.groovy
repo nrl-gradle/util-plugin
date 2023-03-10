@@ -56,7 +56,7 @@ class UtilPlugin implements Plugin<Project>{
     static Jar createSourcesJarTask(Project project)
     {
         Jar sj = project.tasks.create('sourcesJar', Jar.class)
-        sj.classifier = 'sources'
+        sj.archiveClassifier = 'sources'
         sj.configure{
             project.gradle.projectsEvaluated {
                 from project.sourceSets.main.allSource
@@ -74,7 +74,7 @@ class UtilPlugin implements Plugin<Project>{
     static Jar createJavadocJarTask(Project project)
     {
         Jar jj = project.tasks.create('javadocJar', Jar.class)
-        jj.classifier = 'javadoc'
+        jj.archiveClassifier = 'javadoc'
         jj.configure{
             project.gradle.projectsEvaluated {
                 from project.tasks.javadoc.destinationDir
