@@ -23,7 +23,7 @@ class GoOfflineTask extends DefaultTask{
             List<Sync> syncs = new ArrayList<>()
 
             project.configurations.each { conf ->
-                if(conf.canBeResolved && !(conf.name.equals('updateResolver') || conf.name.equals('updateResolverRelease')) {
+                if(conf.canBeResolved && !(conf.name.equals('updateResolver') || conf.name.equals('updateResolverRelease'))) {
                     Sync clTask = project.tasks.create("collectLibs" + conf.name.capitalize(), Sync.class)
                     clTask.configure {
                         from conf
