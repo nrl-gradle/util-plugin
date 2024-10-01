@@ -85,4 +85,5 @@ class UtilPlugin implements Plugin<Project>{
         jj.description = 'Builds an internalJar of the javadocs for this project.'
         return jj
     }
+
 }
