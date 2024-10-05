@@ -23,17 +23,21 @@ class UtilPlugin implements Plugin<Project>{
     
     @Override
     void apply(Project project) {
-        project.pluginManager.apply(JavaPlugin)
-
-        Jar sj = createSourcesJarTask(project)
-        Jar jj = createJavadocJarTask(project)
-        Sync cl = createCollectLibsTask(project)
 
         AddCopyrightTask.createFor(project)
-        ClassDiagram.createFor(project)
-        ClassDiagram.createExtendedFor(project)
-        //CollectLibsIvyTask.createFor(project)
         GoOfflineTask.createFor(project)
+        project.pluginManager.withPlugin('java') {
+            //If you need these outside the java plugin, just write your own.
+            Jar sj = createSourcesJarTask(project)
+            Jar jj = createJavadocJarTask(project)
+            ClassDiagram.createFor(project)
+            ClassDiagram.createExtendedFor(project)
+
+            //Legacy - most of these are actually configured in GoOffline
+            Sync cl = createCollectLibsTask(project)
+            //CollectLibsIvyTask.createFor(project)
+
+        }
     }
 
     

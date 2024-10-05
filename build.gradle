@@ -1,12 +1,12 @@
 plugins{
     id 'java-gradle-plugin'
     id 'groovy'
+    id 'java'
     id 'ivy-publish'
-    id 'com.gradle.plugin-publish' version '1.0.0-rc-1'
+    id 'com.gradle.plugin-publish' version '1.3.0'
     id 'nrlssc.gradle' version '4.0.126'
 }
 
-apply plugin: 'nrlssc.gradle'
 sourceCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
 
@@ -17,7 +17,7 @@ hgit{
 dependencies {
     api gradleApi()
     implementation localGroovy()
-    api 'mil.navy.nrlssc:gplugin-commons:3.0.15'
+    api 'mil.navy.nrlssc:gplugin-commons:3.0.20'
     api 'mil.navy.nrlssc:add-copyright:2.0.18'
     implementation 'io.github.classgraph:classgraph:4.8.78'
     implementation 'org.xhtmlrenderer:flying-saucer-pdf:9.1.22'
@@ -27,17 +27,15 @@ dependencies {
     testImplementation gradleTestKit(),
             'junit:junit:4.12'
 }
-
 pluginBundle {
     website = 'https://github.com/nrl-gradle/util-plugin'
     vcsUrl = 'https://github.com/nrl-gradle/util-plugin.git'
     tags = ['utilities', 'build', 'diagram']
 }
-
 gradlePlugin {
     //noinspection GroovyAssignabilityCheck
     plugins {
-        utilPlugin {
+        create('utilPlugin') {
             id = 'nrlssc.util'
             displayName = 'Utility Tasks Plugin'
             description = 'Adds several extra utility tasks specifically geared towards internal development'
