@@ -7,18 +7,24 @@ plugins{
     id 'nrlssc.gradle' version '4.0.126'
 }
 
-sourceCompatibility = 1.8
+
 compileJava.options.encoding = 'UTF-8'
 
 hgit{
     forceGit = true
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 dependencies {
     api gradleApi()
     implementation localGroovy()
     api 'mil.navy.nrlssc:gplugin-commons:3.0.21'
-    api 'mil.navy.nrlssc:add-copyright:2.0.18'
+    api 'mil.navy.nrlssc:add-copyright:2.0.25'
     implementation 'io.github.classgraph:classgraph:4.8.78'
     implementation 'org.xhtmlrenderer:flying-saucer-pdf:9.1.22'
     implementation 'eu.de-swaef.pdf:Markdown2Pdf:2.0.1'
