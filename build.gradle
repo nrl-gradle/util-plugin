@@ -4,7 +4,7 @@ plugins{
     id 'java'
     id 'ivy-publish'
     id 'com.gradle.plugin-publish' version '1.3.0'
-    id 'nrlssc.gradle' version '4.0.126'
+    id 'nrlssc.gradle' version '5.0.145'
 }
 
 
@@ -23,7 +23,7 @@ java {
 dependencies {
     api gradleApi()
     implementation localGroovy()
-    api 'mil.navy.nrlssc:gplugin-commons:3.0.21'
+    api 'mil.navy.nrlssc:gplugin-commons:5.0.22'
     api 'mil.navy.nrlssc:add-copyright:2.0.25'
     implementation 'io.github.classgraph:classgraph:4.8.78'
     implementation 'org.xhtmlrenderer:flying-saucer-pdf:9.1.22'
