@@ -10,7 +10,7 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.internal.file.PathToFileResolver
 import org.gradle.internal.reflect.Instantiator
 
-class MD2PDFTask extends AbstractCopyTask {
+abstract class MD2PDFTask extends AbstractCopyTask {
     
     @Override
     protected CopyAction createCopyAction() {

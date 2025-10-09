@@ -1,5 +1,5 @@
 plugins {
-    id 'nrlssc.projects' version '5.0.18'
+    id 'nrlssc.projects' version '5.0.19'
 }
 rootProject.name = 'util-plugin'
 
