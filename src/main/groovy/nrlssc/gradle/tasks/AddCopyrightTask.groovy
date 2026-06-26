@@ -1,10 +1,12 @@
 package nrlssc.gradle.tasks
 
-import nrlssc.copyright.AddCopyright
+import nrlssc.legal.AddLegalHeader
 import nrlssc.gradle.UtilPlugin
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -26,6 +28,27 @@ class AddCopyrightTask extends DefaultTask{
 
 
     private String[] files
+
+    @Input
+    String legalVersion = "1.1"
+    @Input
+    String poc = "Naval Research Laboratory"
+    @Input
+    @Optional
+    String sectionCode = '7340'
+
+    void poc(String poc){
+        this.poc = poc
+    }
+
+    void legalVersion(String legalVersion){
+        this.legalVersion = legalVersion
+    }
+
+    void sectionCode(String sectionCode){
+        this.sectionCode = sectionCode;
+    }
+
 
     @InputFiles
     String[] getPaths()
@@ -50,6 +73,7 @@ class AddCopyrightTask extends DefaultTask{
         {
             logger.lifecycle(dir)
         }
-        AddCopyright.main(getPaths())
+        AddLegalHeader al = new AddLegalHeader(legalVersion, poc, sectionCode)
+        al.addCopyright(getPaths())
     }
 }
