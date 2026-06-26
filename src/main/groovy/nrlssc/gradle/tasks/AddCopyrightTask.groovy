@@ -68,10 +68,10 @@ class AddCopyrightTask extends DefaultTask{
     @TaskAction
     void AddCopyrightText()
     {
-        logger.lifecycle("Adding copyright to all java files under: ")
+        logger.lifecycle("Adding legal header to all java source files")
         for(dir in getPaths())
         {
-            logger.lifecycle(dir)
+            logger.debug(dir)
         }
         AddLegalHeader al = new AddLegalHeader(legalVersion, poc, sectionCode)
         al.addCopyright(getPaths())
