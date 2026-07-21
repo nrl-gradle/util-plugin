@@ -1,7 +1,8 @@
 package nrlssc.gradle.tasks
 
-import nrlssc.legal.AddLegalHeader
+
 import nrlssc.gradle.UtilPlugin
+import nrlssc.gradle.tasks.helpers.AddLegalHeader
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.Input
@@ -14,14 +15,14 @@ import org.slf4j.LoggerFactory
 /**
  * Created by scraft on 3/13/2017.
  */
-class AddCopyrightTask extends DefaultTask{
-    private static Logger logger = LoggerFactory.getLogger(AddCopyrightTask.class)
+class AddLegalHeaderTask extends DefaultTask{
+    private static Logger logger = LoggerFactory.getLogger(AddLegalHeaderTask.class)
 
-    static AddCopyrightTask createFor(Project project)
+    static AddLegalHeaderTask createFor(Project project)
     {
-        AddCopyrightTask acTask = project.tasks.create("addCopyrightText", AddCopyrightTask.class)
+        AddLegalHeaderTask acTask = project.tasks.create("addLegalHeader", AddLegalHeaderTask.class)
         acTask.group = UtilPlugin.NRL_GROUP
-        acTask.description = 'Adds the NRL Copyright text comment-block to the head of every java source in your project.'
+        acTask.description = 'Adds the Legal header text comment-block to the head of every java source in your project.'
         return acTask
     }
 
@@ -30,12 +31,14 @@ class AddCopyrightTask extends DefaultTask{
     private String[] files
 
     @Input
-    String legalVersion = "1.1"
+    String legalVersion = "1.0"
     @Input
-    String poc = "Naval Research Laboratory"
+    String poc = "Author"
     @Input
     @Optional
-    String sectionCode = '7340'
+    String sectionCode = '1'
+    @Input
+    String legalText = '/******************************** -- [POC] [LEGAL_VERSION] -- ***********************************/'
 
     void poc(String poc){
         this.poc = poc
@@ -46,9 +49,12 @@ class AddCopyrightTask extends DefaultTask{
     }
 
     void sectionCode(String sectionCode){
-        this.sectionCode = sectionCode;
+        this.sectionCode = sectionCode
     }
 
+    void legalText(String legalText){
+        this.legalText = legalText
+    }
 
     @InputFiles
     String[] getPaths()
@@ -66,14 +72,14 @@ class AddCopyrightTask extends DefaultTask{
 
 
     @TaskAction
-    void AddCopyrightText()
+    void AddLegalHeaderText()
     {
         logger.lifecycle("Adding legal header to all java source files")
         for(dir in getPaths())
         {
             logger.debug(dir)
         }
-        AddLegalHeader al = new AddLegalHeader(legalVersion, poc, sectionCode)
-        al.addCopyright(getPaths())
+        AddLegalHeader al = new AddLegalHeader(legalVersion, poc, sectionCode, legalText)
+        al.addHeader(getPaths())
     }
 }

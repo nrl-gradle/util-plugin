@@ -1,16 +1,11 @@
 package nrlssc.gradle
 
-import nrlssc.gradle.tasks.AddCopyrightTask
+import nrlssc.gradle.tasks.AddLegalHeaderTask
 import nrlssc.gradle.tasks.ClassDiagram
-import nrlssc.gradle.tasks.CollectLibsIvyTask
-import nrlssc.gradle.tasks.DelegateTask
 import nrlssc.gradle.tasks.GoOfflineTask
-import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.file.DuplicatesStrategy
-import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.Sync
 import org.gradle.api.tasks.bundling.Jar
 import org.slf4j.Logger
@@ -24,7 +19,7 @@ class UtilPlugin implements Plugin<Project>{
     @Override
     void apply(Project project) {
 
-        AddCopyrightTask.createFor(project)
+        AddLegalHeaderTask.createFor(project)
         GoOfflineTask.createFor(project)
         project.pluginManager.withPlugin('java') {
             //If you need these outside the java plugin, just write your own.
