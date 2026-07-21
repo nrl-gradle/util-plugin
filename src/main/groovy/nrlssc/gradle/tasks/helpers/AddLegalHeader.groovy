@@ -34,9 +34,9 @@ class AddLegalHeader {
     private String branchCode = "7340";
     private String legalText = '/******************************** -- [POC] [LEGAL_VERSION] -- ***********************************/';
     AddLegalHeader(String legalVersion, String POC, String branchCode, String legalText){
-        this.legalVersion = legalVersion;
-        this.poc = POC;
-        this.branchCode = branchCode;
+        this.legalVersion = legalVersion
+        this.poc = POC
+        this.branchCode = branchCode
         this.legalText = legalText
     }
     AddLegalHeader(){}

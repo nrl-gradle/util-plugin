@@ -39,16 +39,12 @@ class HeaderFileVisitor extends SimpleFileVisitor<Path> {
         this.legalText = legalText
         fullText = legalText.replaceAll("\\[LEGAL_VERSION\\]", legalVersion).replaceAll("\\[SECTION_CODE\\]", sectionCode).replaceAll("\\[POC\\]", poc);
 
-        this.fullTextLine0 = fullText.split("[\\r?\\n]")[0];
-        this.line0Pattern = Pattern.compile(legalText.replaceAll("\\[LEGAL_VERSION\\]", ".*").replaceAll("\\[SECTION_CODE\\]", ".*").replaceAll("\\[POC\\]", ".*"))
-//        InputStream stream = Resources.getResource("nrlssc/legal/nrl-disclaimer-java.txt").openStream();
-//        copyrightLines =
-//                new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8)).lines().collect(Collectors.toList());
-//        stream.close();
-//
-//        for(int i = 0; i < copyrightLines.size(); i++) {
-//            copyrightLines.set(i, copyrightLines.get(i).replaceAll("\\[LEGAL_VERSION\\]", legalVersion).replaceAll("\\[NRL_SECTION_CODE\\]", sectionCode).replaceAll("\\[NRL_POC\\]", poc));
-//        }
+        this.fullTextLine0 = fullText.split("[\\r?\\n]")[0]
+        String line0 = legalText.split("[\\r?\\n]")[0]
+        this.line0Pattern = Pattern.compile(
+                Pattern.quote(line0.replaceAll("\\[LEGAL_VERSION\\]", "0000LV0000").replaceAll("\\[SECTION_CODE\\]", "0000SC0000").replaceAll("\\[POC\\]", "0000POC0000"))
+                        .replaceAll("0000LV0000", ".*").replaceAll("0000SC0000", ".*").replaceAll("0000POC0000", ".*")
+        )
     }
 
     @Override

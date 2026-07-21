@@ -19,9 +19,10 @@ class UtilPlugin implements Plugin<Project>{
     @Override
     void apply(Project project) {
 
-        AddLegalHeaderTask.createFor(project)
+
         GoOfflineTask.createFor(project)
         project.pluginManager.withPlugin('java') {
+            AddLegalHeaderTask.createFor(project)
             //If you need these outside the java plugin, just write your own.
             Jar sj = createSourcesJarTask(project)
             Jar jj = createJavadocJarTask(project)
