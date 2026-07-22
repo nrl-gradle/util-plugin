@@ -60,7 +60,7 @@ class AddLegalHeaderTask extends DefaultTask{
     String[] getPaths()
     {
         if(files == null){
-            files = getProject().sourceSets.main
+            files = getProject().sourceSets.main.allJava.sourceDirectories
         }
         return files
     }
