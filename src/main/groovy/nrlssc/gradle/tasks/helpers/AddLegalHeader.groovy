@@ -48,13 +48,13 @@ class AddLegalHeader {
     }
 
     void addHeader(String dirName) throws IOException {
-
+        logger.lifecycle('Executing addLegalHeader on ' + dirName)
         HeaderFileVisitor fileVisitor = new HeaderFileVisitor(legalVersion, poc, branchCode, legalText);
         Files.walkFileTree(Paths.get(dirName), fileVisitor);
-        logger.debug("Files updated: {}", fileVisitor.filesModified);
-        logger.debug("Files with correct copyright: {}", fileVisitor.filesWithCorrectCopyrightVersion);
-        logger.debug("Files with incorrect copyright: {}", fileVisitor.filesWithIncorrectCopyrightVersion);
-        logger.debug("Files with missing end indicator: {}", fileVisitor.unmodifiableFiles);
+        logger.lifecycle("Files updated: {}", fileVisitor.filesModified);
+        logger.lifecycle("Files with correct header: {}", fileVisitor.filesWithCorrectCopyrightVersion);
+        logger.lifecycle("Files with incorrect header: {}", fileVisitor.filesWithIncorrectCopyrightVersion);
+        logger.lifecycle("Files with missing end indicator: {}", fileVisitor.unmodifiableFiles);
     }
 
 }
