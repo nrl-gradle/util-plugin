@@ -19,9 +19,10 @@ import java.util.stream.Collectors;
 
 class HeaderFileVisitor extends SimpleFileVisitor<Path> {
     private static Logger logger = LoggerFactory.getLogger(HeaderFileVisitor.class);
-    private int filesModified = 0;
-    private int filesWithCorrectCopyrightVersion = 0;
-    private int filesWithIncorrectCopyrightVersion = 0;
+    int filesModified = 0;
+    int filesWithCorrectCopyrightVersion = 0;
+    int filesWithIncorrectCopyrightVersion = 0;
+    int unmodifiableFiles = 0;
 
     private String legalVersion
     private String poc
@@ -63,23 +64,39 @@ class HeaderFileVisitor extends SimpleFileVisitor<Path> {
                 filesWithCorrectCopyrightVersion++;
             } else if (javaFilesLines.get(0).matches(line0Pattern)) {
                 // Have a copyright header, but wrong verion. Replace.
-                String tempFilename = path.toString() + ".zzz";
-                Path tempFile = Paths.get(tempFilename);
-
-                Files.write(tempFile, List.of(fullText), StandardOpenOption.CREATE);
                 int indexOfEndComment = -1;
+                boolean foundEnd = false;
                 for (int i = 0; i < javaFilesLines.size(); i++) {
                     if (javaFilesLines.get(i).equals(endMarker)) {
                         indexOfEndComment = i;
+                        foundEnd = true;
                         break;
                     }
                 }
-                Files.write(tempFile, javaFilesLines.subList(indexOfEndComment + 1, javaFilesLines.size()), Charset.defaultCharset(), StandardOpenOption.APPEND);
 
-                Files.move(tempFile, path, StandardCopyOption.REPLACE_EXISTING);
-                Files.setLastModifiedTime(path, lastModifiedTime);
-                logger.info("Incorrect version of copyright was present in file {}", path);
-                filesWithIncorrectCopyrightVersion++;
+                if(!foundEnd){
+                    logger.debug("Found possible header, but was missing end indicator.  No modifications will be made " + path.toString())
+                    unmodifiableFiles++
+                }
+                else
+                {
+                    String tempFilename = path.toString() + ".zzz";
+                    Path tempFile = Paths.get(tempFilename);
+
+                    Files.write(tempFile, List.of(fullText), StandardOpenOption.CREATE);
+
+
+
+                    Files.write(tempFile, javaFilesLines.subList(indexOfEndComment + 1, javaFilesLines.size()), Charset.defaultCharset(), StandardOpenOption.APPEND);
+
+                    Files.move(tempFile, path, StandardCopyOption.REPLACE_EXISTING);
+                    Files.setLastModifiedTime(path, lastModifiedTime);
+                    logger.info("Incorrect version of copyright was present in file {}", path);
+                    filesWithIncorrectCopyrightVersion++;
+
+                }
+
+
             } else {
                 String tempFilename = path.toString() + ".zzz";
                 Path tempFile = Paths.get(tempFilename);
@@ -97,15 +114,5 @@ class HeaderFileVisitor extends SimpleFileVisitor<Path> {
         return super.visitFile(path, attrs);
     }
 
-    int getFilesModified() {
-        return filesModified;
-    }
 
-    int getFilesWithCorrectCopyrightVersion() {
-        return filesWithCorrectCopyrightVersion;
-    }
-
-    int getFilesWithIncorrectCopyrightVersion() {
-        return filesWithIncorrectCopyrightVersion;
-    }
 }

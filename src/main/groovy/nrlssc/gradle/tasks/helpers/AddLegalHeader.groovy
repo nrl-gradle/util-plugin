@@ -51,9 +51,10 @@ class AddLegalHeader {
 
         HeaderFileVisitor fileVisitor = new HeaderFileVisitor(legalVersion, poc, branchCode, legalText);
         Files.walkFileTree(Paths.get(dirName), fileVisitor);
-        logger.debug("Files updated: {}", fileVisitor.getFilesModified());
-        logger.debug("Files with correct copyright: {}", fileVisitor.getFilesWithCorrectCopyrightVersion());
-        logger.debug("Files with incorrect copyright: {}", fileVisitor.getFilesWithIncorrectCopyrightVersion());
+        logger.debug("Files updated: {}", fileVisitor.filesModified);
+        logger.debug("Files with correct copyright: {}", fileVisitor.filesWithCorrectCopyrightVersion);
+        logger.debug("Files with incorrect copyright: {}", fileVisitor.filesWithIncorrectCopyrightVersion);
+        logger.debug("Files with missing end indicator: {}", fileVisitor.unmodifiableFiles);
     }
 
 }
