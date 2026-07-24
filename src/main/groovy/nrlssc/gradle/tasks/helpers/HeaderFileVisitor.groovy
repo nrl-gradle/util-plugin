@@ -37,16 +37,19 @@ class HeaderFileVisitor extends SimpleFileVisitor<Path> {
         this.poc = poc
         this.sectionCode = sectionCode
         this.legalText = legalText
-        fullText = legalText.replaceAll("\\[LEGAL_VERSION\\]", legalVersion).replaceAll("\\[SECTION_CODE\\]", sectionCode).replaceAll("\\[POC\\]", poc);
+        fullText = legalText.replaceAll("\\[LEGAL_VERSION\\]", legalVersion).replaceAll("\\[SECTION_CODE\\]", sectionCode).replaceAll("\\[POC\\]", poc) + "\n" + endMarker;
 
         this.fullTextLine0 = fullText.split("[\\r?\\n]")[0]
         String line0 = legalText.split("[\\r?\\n]")[0]
         this.line0Pattern = Pattern.compile(
-                Pattern.quote(line0.replaceAll("\\[LEGAL_VERSION\\]", "0000LV0000").replaceAll("\\[SECTION_CODE\\]", "0000SC0000").replaceAll("\\[POC\\]", "0000POC0000"))
-                        .replaceAll("0000LV0000", ".*").replaceAll("0000SC0000", ".*").replaceAll("0000POC0000", ".*")
+                Pattern.quote(
+                        line0.replaceAll("\\[LEGAL_VERSION\\]", "0000LV0000").replaceAll("\\[SECTION_CODE\\]", "0000SC0000").replaceAll("\\[POC\\]", "0000POC0000")
+                )
+                        .replaceAll("0000LV0000", ".*").replaceAll("0000SC0000", ".*").replaceAll("0000POC0000", ".*") + ".*"
         )
     }
 
+    private String endMarker = "/* === LEGAL HEADER END NON-MODIFIABLE CONTENT == */"
     @Override
     FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
         String extension = com.google.common.io.Files.getFileExtension(path.toString());
@@ -66,7 +69,7 @@ class HeaderFileVisitor extends SimpleFileVisitor<Path> {
                 Files.write(tempFile, List.of(fullText), StandardOpenOption.CREATE);
                 int indexOfEndComment = -1;
                 for (int i = 0; i < javaFilesLines.size(); i++) {
-                    if (javaFilesLines.get(i).contains("*/")) {
+                    if (javaFilesLines.get(i).equals(endMarker)) {
                         indexOfEndComment = i;
                         break;
                     }
