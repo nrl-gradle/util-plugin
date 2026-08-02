@@ -29,15 +29,17 @@ class AddLegalHeader {
 
     private static final Logger logger = LoggerFactory.getLogger(AddLegalHeader.class);
 
-    private String legalVersion = "1.1";
-    private String poc = "Naval Research Laboratory";
-    private String branchCode = "7340";
-    private String legalText = '/******************************** -- [POC] [LEGAL_VERSION] -- ***********************************/';
-    AddLegalHeader(String legalVersion, String POC, String branchCode, String legalText){
+    private String legalVersion = "1.0";
+    private String poc = "POC";
+    private String branchCode = "CODE";
+    private String legalText = 'LEGAL HEADER';
+    private boolean force = false;
+    AddLegalHeader(String legalVersion, String POC, String branchCode, String legalText, boolean force = false){
         this.legalVersion = legalVersion
         this.poc = POC
         this.branchCode = branchCode
         this.legalText = legalText
+        this.force = force;
     }
     AddLegalHeader(){}
 
@@ -49,7 +51,7 @@ class AddLegalHeader {
 
     void addHeader(String dirName) throws IOException {
         logger.lifecycle('Executing addLegalHeader on ' + dirName)
-        HeaderFileVisitor fileVisitor = new HeaderFileVisitor(legalVersion, poc, branchCode, legalText);
+        HeaderFileVisitor fileVisitor = new HeaderFileVisitor(legalVersion, poc, branchCode, legalText, force);
         Files.walkFileTree(Paths.get(dirName), fileVisitor);
         logger.lifecycle("Files updated: {}", fileVisitor.filesModified);
         logger.lifecycle("Files with correct header: {}", fileVisitor.filesWithCorrectCopyrightVersion);

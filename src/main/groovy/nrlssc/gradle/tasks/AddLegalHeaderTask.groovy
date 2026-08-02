@@ -38,7 +38,7 @@ class AddLegalHeaderTask extends DefaultTask{
     @Optional
     String sectionCode = '1'
     @Input
-    String legalText = '/******************************** -- [POC] [LEGAL_VERSION] -- ***********************************/'
+    String legalText = 'LEGAL HEADER'
 
     void poc(String poc){
         this.poc = poc
@@ -79,7 +79,15 @@ class AddLegalHeaderTask extends DefaultTask{
         {
             logger.debug(dir)
         }
-        AddLegalHeader al = new AddLegalHeader(legalVersion, poc, sectionCode, legalText)
+        AddLegalHeader al;
+        if(project.hasProperty("forceHeader") && project.property("forceHeader").toString().equalsIgnoreCase("true"))
+        {
+            al = new AddLegalHeader(legalVersion, poc, sectionCode, legalText, true)
+        }
+        else
+        {
+            al = new AddLegalHeader(legalVersion, poc, sectionCode, legalText)
+        }
         al.addHeader(getPaths())
     }
 }

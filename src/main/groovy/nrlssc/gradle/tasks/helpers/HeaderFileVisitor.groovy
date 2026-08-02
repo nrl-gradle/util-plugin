@@ -33,24 +33,28 @@ class HeaderFileVisitor extends SimpleFileVisitor<Path> {
     private String fullTextLine0;
     private Pattern line0Pattern
 
-    HeaderFileVisitor(String legalVersion, String poc, String sectionCode, String legalText) throws IOException {
+    public boolean force;
+
+    HeaderFileVisitor(String legalVersion, String poc, String sectionCode, String legalText, boolean force = false) throws IOException {
         this.legalVersion = legalVersion
         this.poc = poc
         this.sectionCode = sectionCode
-        this.legalText = legalText
-        fullText = legalText.replaceAll("\\[LEGAL_VERSION\\]", legalVersion).replaceAll("\\[SECTION_CODE\\]", sectionCode).replaceAll("\\[POC\\]", poc) + "\n" + endMarker;
+        this.legalText = legalText;
+        this.force = force;
+        fullText = startMarker.replaceAll("\\[LEGAL_VERSION\\]", legalVersion) + "\n" + legalText.replaceAll("\\[LEGAL_VERSION\\]", legalVersion).replaceAll("\\[SECTION_CODE\\]", sectionCode).replaceAll("\\[POC\\]", poc) + "\n" + endMarker;
 
         this.fullTextLine0 = fullText.split("[\\r?\\n]")[0]
-        String line0 = legalText.split("[\\r?\\n]")[0]
+
         this.line0Pattern = Pattern.compile(
-                Pattern.quote(
-                        line0.replaceAll("\\[LEGAL_VERSION\\]", "0000LV0000").replaceAll("\\[SECTION_CODE\\]", "0000SC0000").replaceAll("\\[POC\\]", "0000POC0000")
-                )
-                        .replaceAll("0000LV0000", ".*").replaceAll("0000SC0000", ".*").replaceAll("0000POC0000", ".*") + ".*"
+                Pattern.quote('/******************************** -- LEGAL ') +
+                        '.*' +
+                        Pattern.quote(' -- ***********************************') +
+                        '.*'
         )
     }
 
-    private String endMarker = "/* === LEGAL HEADER END NON-MODIFIABLE CONTENT == */"
+    private String startMarker = "/******************************** -- LEGAL [LEGAL_VERSION] -- ***********************************";
+    private String endMarker = "******************************** -- END LEGAL -- ***********************************/"
     @Override
     FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
         String extension = com.google.common.io.Files.getFileExtension(path.toString());
@@ -58,24 +62,39 @@ class HeaderFileVisitor extends SimpleFileVisitor<Path> {
             logger.debug("Considering file {}", path);
             FileTime lastModifiedTime = Files.getLastModifiedTime(path);
 
-            List<String> javaFilesLines = Files.readAllLines(path);
-            if (fullTextLine0.equals(javaFilesLines.get(0))) {
-                logger.info("Copyright was present in file {}", path);
+            String line0 = readLine(path.toAbsolutePath().toString());
+            if (fullTextLine0.equals(line0)) {
+                logger.info("Legal header was present in file {}", path);
                 filesWithCorrectCopyrightVersion++;
-            } else if (javaFilesLines.get(0).matches(line0Pattern)) {
+            } else if (line0.matches(line0Pattern)) {
                 // Have a copyright header, but wrong verion. Replace.
+                List<String> javaFilesLines = Files.readAllLines(path);
                 int indexOfEndComment = -1;
                 boolean foundEnd = false;
+                int indexOfOldEndComment = -1;
                 for (int i = 0; i < javaFilesLines.size(); i++) {
-                    if (javaFilesLines.get(i).equals(endMarker)) {
+                    String curLine = javaFilesLines.get(i);
+                    if (curLine.equals(endMarker)) {
                         indexOfEndComment = i;
                         foundEnd = true;
                         break;
                     }
+                    if(force) {
+                        if (curLine.contains("*/")) {
+                            indexOfOldEndComment = i;
+                            break;
+                        }
+                    }
+                }
+
+                if(force && indexOfEndComment == -1 && indexOfOldEndComment > 0){
+                    indexOfEndComment = indexOfOldEndComment;
+                    foundEnd = true;
+                    logger.info("Found original ending, forcing overwrite");
                 }
 
                 if(!foundEnd){
-                    logger.debug("Found possible header, but was missing end indicator.  No modifications will be made " + path.toString())
+                    logger.info("Found possible header, but was missing end indicator.  No modifications will be made " + path.toString())
                     unmodifiableFiles++
                 }
                 else
@@ -84,9 +103,6 @@ class HeaderFileVisitor extends SimpleFileVisitor<Path> {
                     Path tempFile = Paths.get(tempFilename);
 
                     Files.write(tempFile, List.of(fullText), StandardOpenOption.CREATE);
-
-
-
                     Files.write(tempFile, javaFilesLines.subList(indexOfEndComment + 1, javaFilesLines.size()), Charset.defaultCharset(), StandardOpenOption.APPEND);
 
                     Files.move(tempFile, path, StandardCopyOption.REPLACE_EXISTING);
@@ -100,6 +116,7 @@ class HeaderFileVisitor extends SimpleFileVisitor<Path> {
             } else {
                 String tempFilename = path.toString() + ".zzz";
                 Path tempFile = Paths.get(tempFilename);
+                List<String> javaFilesLines = Files.readAllLines(path);
 
                 Files.write(tempFile, List.of(fullText), StandardOpenOption.CREATE);
                 Files.write(tempFile, javaFilesLines, Charset.defaultCharset(), StandardOpenOption.APPEND);
@@ -115,4 +132,12 @@ class HeaderFileVisitor extends SimpleFileVisitor<Path> {
     }
 
 
+    static String readLine(String path) {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String firstLine = br.readLine(); // Reads only the first line
+            return firstLine
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
